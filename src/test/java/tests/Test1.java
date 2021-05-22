@@ -1,42 +1,46 @@
 package tests;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.open;
 
 public class Test1 {
-    Map<String,String> dataMap = new HashMap<String,String>();
+    private String fName;
+    private String lName;
+    private String sex;
+    private String phone;
 
-    public void setData(){
-        dataMap.put("firstName", "Dmitriy");
-        dataMap.put("lastName", "Belousov");
-        dataMap.put("Male", "[for='gender-radio-1']");
-        dataMap.put("phoneNumber", "1234567890");
+    public void setData(String firstName, String lastName, String gender, String phoneNumber){
+        fName = firstName;
+        lName = lastName;
+        sex = gender;
+        phone = phoneNumber;
     }
 
 
-    public void openPage() {
-        open("https://demoqa.com/automation-practice-form");
-    }
 
     public void fillForm() {
 
-        $("#firstName").setValue(dataMap.get("firstName"));
-        $("#lastName").setValue(dataMap.get("lastName"));
-        $("[for='gender-radio-1']").click(); // Male
-        $("#userNumber").setValue(dataMap.get("phoneNumber"));
+        $("#firstName").setValue(fName);
+        $("#lastName").setValue(lName);
+
+        if(sex.equals("Male")){
+            $("[for='gender-radio-1']").click(); // Male
+        } else if (sex.equals("Female")) {
+            $("[for='gender-radio-2']").click(); // Female
+        } else {
+            $("[for='gender-radio-3']").click(); // Other
+        }
+
+        $("#userNumber").setValue(phone);
         $("#submit").click();
     }
 
     public void checkForm() {
         $(".table-responsive").shouldHave(
-                text(dataMap.get("firstName")),
-                text(dataMap.get("lastName")),
-                text("Male"),
-                text(dataMap.get("phoneNumber"))
+                text(fName),
+                text(lName),
+                text(sex),
+                text(phone)
         );
     }
 }
